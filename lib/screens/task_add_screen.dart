@@ -4,13 +4,19 @@ import 'package:interview_task/providers/task_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class TaskAddScreen extends StatelessWidget {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  TaskStatus _selectedStatus = TaskStatus.NotStarted; // Default status
-
+class TaskAddScreen extends StatefulWidget {
   TaskAddScreen({Key? key});
 
+  @override
+  State<TaskAddScreen> createState() => _TaskAddScreenState();
+}
+
+class _TaskAddScreenState extends State<TaskAddScreen> {
+  final _titleController = TextEditingController();
+
+  final _descriptionController = TextEditingController();
+
+  TaskStatus _selectedStatus = TaskStatus.NotStarted;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

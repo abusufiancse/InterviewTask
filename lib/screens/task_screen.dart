@@ -22,77 +22,113 @@ class _TaskScreenState extends State<TaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Manager'),
+        title: const Text(
+          'Task Manager',
+          style: TextStyle(
+              fontFamily: 'Roboto', fontSize: 28, fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: Colors.orange,
         actions: [
-          _buildSortDropdown(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.deepOrange),
+                width: 120,
+                child: Center(
+                  child: _buildSortDropdown(),
+                )),
+          )
         ],
       ),
-      body: Consumer<TaskProvider>(
-        builder: (context, provider, child) {
-          final tasks = _getSortedTasks(provider.tasks);
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+        child: Consumer<TaskProvider>(
+          builder: (context, provider, child) {
+            final tasks = _getSortedTasks(provider.tasks);
 
-          return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
+            return ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                final task = tasks[index];
 
-              return ListTile(
-                title: Text("ID: ${task.id} - ${task.title}"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Description: ${task.description}"),
-                    _buildStatusDropdown(task),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TaskEditScreen(task: task),
-                    ),
-                  );
-                },
-                onLongPress: () {
-                  _showDeleteDialog(context, taskProvider, task.id!);
-                },
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TaskEditScreen(task: task),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        _showDeleteDialog(context, taskProvider, task.id!);
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
+                return ListTile(
+                  title: Text(
+                    "ID: ${task.id} - ${task.title}",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Description: ${task.description}",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      _buildStatusDropdown(task),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskEditScreen(task: task),
+                      ),
+                    );
+                  },
+                  onLongPress: () {
+                    _showDeleteDialog(context, taskProvider, task.id!);
+                  },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.orange,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskEditScreen(task: task),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          _showDeleteDialog(context, taskProvider, task.id!);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TaskAddScreen(),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskAddScreen(),
+              ),
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.deepOrange,
+          ),
+        ),
       ),
     );
   }

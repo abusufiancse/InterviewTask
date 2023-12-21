@@ -15,9 +15,20 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => TaskProvider(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter SQLite CRUD',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          textTheme: const TextTheme(
+            titleLarge: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 22,
+                fontWeight: FontWeight.w600),
+            bodySmall: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 18,
+            ),
+          ),
         ),
         home: const TaskScreen(),
       ),
