@@ -1,25 +1,29 @@
-// lib/models/task_model.dart
+enum TaskStatus {
+  NotStarted,
+  InProgress,
+  InReview,
+  Cancelled,
+  Complete,
+}
 
 class Task {
-  int? id;
-  String title;
-  String description;
-  String status;
+  final int? id;
+  final String title;
+  final String description;
+  final TaskStatus status;
 
-  Task(
-      {this.id,
-      required this.title,
-      required this.description,
-      required this.status});
-
-  get completed => null;
+  Task({
+    required this.title,
+    required this.description,
+    required this.status,
+    this.id,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'description': description,
-      'status': status,
+      'status': status.toString().split('.').last,
     };
   }
 
@@ -28,7 +32,12 @@ class Task {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      status: map['status'],
+      status: _convertStringToTaskStatus(map['status']),
     );
+  }
+
+  static TaskStatus _convertStringToTaskStatus(String status) {
+    return TaskStatus.values
+        .firstWhere((e) => e.toString() == 'TaskStatus.$status');
   }
 }

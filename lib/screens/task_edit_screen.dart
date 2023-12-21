@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:interview_task/models/task_models.dart';
 import 'package:interview_task/providers/task_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class TaskEditScreen extends StatefulWidget {
   final Task task;
@@ -16,14 +16,14 @@ class TaskEditScreen extends StatefulWidget {
 class _TaskEditScreenState extends State<TaskEditScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _statusController = TextEditingController();
+  TaskStatus _selectedStatus = TaskStatus.NotStarted; // Default status
 
   @override
   void initState() {
     super.initState();
     _titleController.text = widget.task.title;
     _descriptionController.text = widget.task.description;
-    _statusController.text = widget.task.status;
+    _selectedStatus = widget.task.status;
   }
 
   @override
@@ -45,25 +45,21 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Description'),
             ),
-            TextField(
-              controller: _statusController,
-              decoration: const InputDecoration(labelText: 'Status'),
-            ),
+            _buildStatusDropdown(),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
                 final title = _titleController.text;
                 final description = _descriptionController.text;
-                final status = _statusController.text;
 
-                if (title.isNotEmpty &&
-                    description.isNotEmpty &&
-                    status.isNotEmpty) {
+                if (title.isNotEmpty && description.isNotEmpty) {
                   final updatedTask = Task(
-                      id: widget.task.id,
-                      title: title,
-                      description: description,
-                      status: status);
+                    id: widget.task.id,
+                    title: title,
+                    description: description,
+                    status: _selectedStatus,
+                  );
+
                   await Provider.of<TaskProvider>(context, listen: false)
                       .updateTask(updatedTask);
 
@@ -87,6 +83,23 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatusDropdown() {
+    return DropdownButton<TaskStatus>(
+      value: _selectedStatus,
+      items: TaskStatus.values.map((status) {
+        return DropdownMenuItem<TaskStatus>(
+          value: status,
+          child: Text(status.toString().split('.').last),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedStatus = value!;
+        });
+      },
     );
   }
 }

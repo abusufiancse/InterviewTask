@@ -42,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Description: ${task.description}"),
-                    Text("Status: ${task.status}"),
+                    _buildStatusDropdown(task),
                   ],
                 ),
                 onTap: () {
@@ -114,15 +114,41 @@ class _TaskScreenState extends State<TaskScreen> {
     );
   }
 
+  Widget _buildStatusDropdown(Task task) {
+    return DropdownButton<TaskStatus>(
+      value: task.status,
+      items: TaskStatus.values.map((status) {
+        return DropdownMenuItem<TaskStatus>(
+          value: status,
+          child: Text(status.toString().split('.').last),
+        );
+      }).toList(),
+      onChanged: (value) {
+        final updatedTask = Task(
+          id: task.id,
+          title: task.title,
+          description: task.description,
+          status: value!,
+        );
+        Provider.of<TaskProvider>(context, listen: false)
+            .updateTask(updatedTask);
+      },
+    );
+  }
+
   List<Task> _getSortedTasks(List<Task> tasks) {
     switch (_selectedSortOption) {
       case 'Title':
-        return tasks..sort((a, b) => a.title.compareTo(b.title));
+        tasks.sort((a, b) => a.title.compareTo(b.title));
+        break;
       case 'Status':
-        return tasks..sort((a, b) => a.status.compareTo(b.status));
+        tasks.sort((a, b) => a.status.index.compareTo(b.status.index));
+        break;
       default:
-        return tasks;
+        // Default sorting by ID
+        tasks.sort((a, b) => a.id!.compareTo(b.id!));
     }
+    return tasks;
   }
 
   Future<void> _showDeleteDialog(
