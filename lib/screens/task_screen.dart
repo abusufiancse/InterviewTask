@@ -43,7 +43,7 @@ class _TaskScreenState extends State<TaskScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+        padding: const EdgeInsets.all(10),
         child: Consumer<TaskProvider>(
           builder: (context, provider, child) {
             final tasks = _getSortedTasks(provider.tasks);
@@ -52,60 +52,63 @@ class _TaskScreenState extends State<TaskScreen> {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-
-                return ListTile(
-                  title: Text(
-                    "ID: ${task.id} - ${task.title}",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Description: ${task.description}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      _buildStatusDropdown(task),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TaskEditScreen(task: task),
-                      ),
-                    );
-                  },
-                  onLongPress: () {
-                    _showDeleteDialog(context, taskProvider, task.id!);
-                  },
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.orange,
+                return Card(
+                  color: Colors.orange.shade50,
+                  child: ListTile(
+                    title: Text(
+                      "ID: ${task.id} - ${task.title}",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Description: ${task.description}",
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TaskEditScreen(task: task),
-                            ),
-                          );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
+                        _buildStatusDropdown(task),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TaskEditScreen(task: task),
                         ),
-                        onPressed: () {
-                          _showDeleteDialog(context, taskProvider, task.id!);
-                        },
-                      ),
-                    ],
+                      );
+                    },
+                    onLongPress: () {
+                      _showDeleteDialog(context, taskProvider, task.id!);
+                    },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.orange,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TaskEditScreen(task: task),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            _showDeleteDialog(context, taskProvider, task.id!);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -151,24 +154,33 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Widget _buildStatusDropdown(Task task) {
-    return DropdownButton<TaskStatus>(
-      value: task.status,
-      items: TaskStatus.values.map((status) {
-        return DropdownMenuItem<TaskStatus>(
-          value: status,
-          child: Text(status.toString().split('.').last),
-        );
-      }).toList(),
-      onChanged: (value) {
-        final updatedTask = Task(
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          status: value!,
-        );
-        Provider.of<TaskProvider>(context, listen: false)
-            .updateTask(updatedTask);
-      },
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.orange.shade200),
+      width: 200,
+      height: 30,
+      child: Center(
+        child: DropdownButton<TaskStatus>(
+          value: task.status,
+          items: TaskStatus.values.map((status) {
+            return DropdownMenuItem<TaskStatus>(
+              value: status,
+              child: Text(status.toString().split('.').last),
+            );
+          }).toList(),
+          onChanged: (value) {
+            final updatedTask = Task(
+              id: task.id,
+              title: task.title,
+              description: task.description,
+              status: value!,
+            );
+            Provider.of<TaskProvider>(context, listen: false)
+                .updateTask(updatedTask);
+          },
+        ),
+      ),
     );
   }
 
@@ -194,23 +206,35 @@ class _TaskScreenState extends State<TaskScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Task'),
+          title: const Text(
+            'Delete Task',
+            style: TextStyle(color: Colors.red),
+          ),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Are you sure you want to delete this task?'),
+                Text(
+                  'Are you sure you want to delete this task?',
+                  style: TextStyle(fontSize: 14),
+                ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(fontSize: 16),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Delete'),
+              child: const Text(
+                'Delete',
+                style: TextStyle(fontSize: 16),
+              ),
               onPressed: () async {
                 await provider.deleteTask(taskId);
                 Navigator.of(context).pop();

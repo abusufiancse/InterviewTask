@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class TaskEditScreen extends StatefulWidget {
   final Task task;
 
-  TaskEditScreen({Key? key, required this.task}) : super(key: key);
+  const TaskEditScreen({Key? key, required this.task}) : super(key: key);
 
   @override
   _TaskEditScreenState createState() => _TaskEditScreenState();
@@ -29,7 +29,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange.shade50,
       appBar: AppBar(
+        backgroundColor: Colors.orange,
         title: const Text('Edit Task'),
       ),
       body: Padding(
@@ -39,11 +41,27 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.w400)),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.w400)),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             _buildStatusDropdown(),
             const SizedBox(height: 16),
@@ -78,7 +96,14 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   );
                 }
               },
-              child: const Text('Update Task'),
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.orange.shade400),
+              ),
+              child: Text(
+                'Update Task',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
           ],
         ),

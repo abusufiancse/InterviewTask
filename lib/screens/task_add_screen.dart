@@ -20,21 +20,43 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange.shade50,
       appBar: AppBar(
-        title: const Text('Add Task'),
+        backgroundColor: Colors.orange,
+        title: Text('Add Task',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(fontWeight: FontWeight.w700)),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.w400)),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontWeight: FontWeight.w400)),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             _buildStatusDropdown(),
             const SizedBox(height: 16),
@@ -69,7 +91,14 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                   );
                 }
               },
-              child: const Text('Add Task'),
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.orange.shade400),
+              ),
+              child: Text(
+                'Add Task',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
           ],
         ),

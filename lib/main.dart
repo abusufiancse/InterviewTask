@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       create: (context) => TaskProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter SQLite CRUD',
+        title: 'Flutter SQLite CRUD Final',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: const TextTheme(
